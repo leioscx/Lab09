@@ -15,10 +15,6 @@ import lab09.pantallas.PantallaListaEstudiantes;
  */
 public class Lab09 {
 
-    /**
-     * @param args the command line arguments
-     */
-    
     public static List<Estudiante> listaEstudianteGlobal = new ArrayList<>();
     
     public static void main(String[] args) {

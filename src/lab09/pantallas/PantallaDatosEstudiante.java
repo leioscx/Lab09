@@ -13,12 +13,9 @@ import lab09.pantallas.PantallaListaEstudiantes;
  */
 public class PantallaDatosEstudiante extends javax.swing.JFrame {
 
-    /**
-     * Creates new form PantallaDatosEstudiante
-     */
     private Estudiante estudiante;
     private PantallaListaEstudiantes padre;
-    private boolean editando;
+    private boolean editando = false;
     
     
     public PantallaDatosEstudiante() {
@@ -31,16 +28,31 @@ public class PantallaDatosEstudiante extends javax.swing.JFrame {
         editando = false;
     }
     
+    public PantallaDatosEstudiante(PantallaListaEstudiantes padre, Estudiante estudiante){
+        initComponents();
+        this.padre = padre;
+        this.estudiante = estudiante;
+        editando = true;
+        setValoresEstudiante();
+    }
+    
     private void setValoresEstudiante(){
+        
+        txtNombre.setText(this.estudiante.getNombre());
+        txtApellido.setText(this.estudiante.getApellido());
+        txtDNI.setText(this.estudiante.getDni());
+        
+    }
+    
+    private void obtenerValoresEstudiante(){
+        
+        if(!editando){
+            this.estudiante = new Estudiante();
+        }
         this.estudiante.setNombre(txtNombre.getText());
         this.estudiante.setApellido(txtApellido.getText());
         this.estudiante.setDni(txtDNI.getText());
-    }
-    
-    private void getValoresEstudiantes(){
-        this.estudiante.getNombre();
-        this.estudiante.getApellido();
-        this.estudiante.getDni();
+        
     }
 
     /**
@@ -151,7 +163,18 @@ public class PantallaDatosEstudiante extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
+        
+        obtenerValoresEstudiante();
+        
+        if (editando){
+            padre.actualizarEstudiante(this.estudiante);
+        }
+        else{
+            padre.agregarEstudiante(this.estudiante);
+        }
+        
+        this.setVisible(false);
+        padre.setVisible(true);
         
     }//GEN-LAST:event_btnGuardarActionPerformed
 

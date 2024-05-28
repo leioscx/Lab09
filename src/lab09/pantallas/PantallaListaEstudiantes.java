@@ -5,6 +5,8 @@
 package lab09.pantallas;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import lab09.Lab09;
 import lab09.entidades.Estudiante;
 
 /**
@@ -13,12 +15,11 @@ import lab09.entidades.Estudiante;
  */
 public class PantallaListaEstudiantes extends javax.swing.JFrame {
 
-    private DefaultListModel<Estudiante> modelo = new DefaultListModel<>();
-    /**
-     * Creates new form PantallaListaEstudiantes
-     */
+    private DefaultListModel<String> modelo = new DefaultListModel<>();
+    
     public PantallaListaEstudiantes() {
         initComponents();
+        lstEstudiantes.setModel(modelo);
     }
 
     /**
@@ -45,6 +46,11 @@ public class PantallaListaEstudiantes extends javax.swing.JFrame {
         jLabel1.setText("Lista de Estudiantes");
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         lstEstudiantes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(lstEstudiantes);
@@ -57,8 +63,18 @@ public class PantallaListaEstudiantes extends javax.swing.JFrame {
         });
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -105,11 +121,60 @@ public class PantallaListaEstudiantes extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         
-        PantallaDatosEstudiante pantallaAgregar = new PantallaDatosEstudiante();
+        PantallaDatosEstudiante pantallaAgregar = new PantallaDatosEstudiante(this);
         pantallaAgregar.setVisible(true);
         pantallaAgregar.setLocationRelativeTo(null);
         
     }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        
+        int index = lstEstudiantes.getSelectedIndex();
+        
+        if (index > -1){
+            
+            Estudiante es = Lab09.listaEstudianteGlobal.get(index);
+        
+            PantallaDatosEstudiante pantallaEditar = new PantallaDatosEstudiante(this, es);
+            pantallaEditar.setVisible(true);
+            pantallaEditar.setLocationRelativeTo(null);
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        
+        int index = lstEstudiantes.getSelectedIndex();
+        
+        if (index > -1){
+            
+            Estudiante es = Lab09.listaEstudianteGlobal.get(index);
+            
+            int option = JOptionPane.showConfirmDialog(this, "¿Deseas eliminar a " + es.getNombre() + "?", "Alerta", JOptionPane.WARNING_MESSAGE);
+            
+            if (option == JOptionPane.OK_OPTION){
+                Lab09.listaEstudianteGlobal.remove(es);
+            }
+            
+            actualizarLista();
+        }
+        
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        
+        String textoBuscar = txtBuscar.getText();
+        
+        modelo.clear();
+        
+        for (Estudiante es : Lab09.listaEstudianteGlobal){
+            
+            if (es.getTexto().contains(textoBuscar)){
+                modelo.addElement(es.getTexto());
+            }
+            
+        }
+        
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -156,4 +221,35 @@ public class PantallaListaEstudiantes extends javax.swing.JFrame {
     private javax.swing.JList<String> lstEstudiantes;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
+
+    void actualizarEstudiante(Estudiante estudiante) {
+        
+        for (int i = 0; i < Lab09.listaEstudianteGlobal.size(); i++){
+            
+            Estudiante es = Lab09.listaEstudianteGlobal.get(i);
+            
+            if (es.hashCode() == estudiante.hashCode()){
+                Lab09.listaEstudianteGlobal.set(i, estudiante);
+            }
+        }
+        
+        actualizarLista();
+    }    
+
+    void agregarEstudiante(Estudiante estudiante) {
+        
+        Lab09.listaEstudianteGlobal.add(estudiante);
+        actualizarLista();
+        
+    }
+    
+    void actualizarLista(){
+        
+        modelo.clear();
+        
+        for (Estudiante es : Lab09.listaEstudianteGlobal){
+            modelo.addElement(es.getTexto());
+        }
+        
+    }
 }

@@ -15,7 +15,7 @@ public class Estudiante {
     private String dni;
     
     public String getTexto(){
-        return nombre + " " + apellido + " | " + dni;
+        return this.nombre + " " + this.apellido + " | " + this.dni;
     }
 
     public String getNombre() {
